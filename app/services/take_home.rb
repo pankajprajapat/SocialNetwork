@@ -1,6 +1,8 @@
 class TakeHome
   include HTTParty
   base_uri 'https://takehome.io'
+  TWITTER_KEYS = ["username", "tweet"]
+  FACEBOOK_KEYS = ["name", "status"]
 
   def initialize(service)
     @service = service
@@ -12,13 +14,30 @@ class TakeHome
     begin
       response = HTTParty.get("#{TakeHome.base_uri}/#{@service}")
       if response.code == 200
-        JSON.parse(response.body)
+        res = JSON.parse(response.body)
+        if res.first.keys == check_keys
+          res
+        else
+          raise Error
+        end
       else
         raise Error
       end
     rescue
       retry_count += 1
       retry if retry_count <= 3
+    end
+  end
+
+  private
+
+  def check_keys
+    if @service == "facebook"
+      FACEBOOK_KEYS
+    elsif @service == "twitter"
+      TWITTER_KEYS
+    else
+      []
     end
   end
 end
