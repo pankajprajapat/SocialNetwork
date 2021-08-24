@@ -14,19 +14,15 @@ class TakeHome
     begin
       response = HTTParty.get("#{TakeHome.base_uri}/#{@service}")
       if response.code == 200
-        res = JSON.parse(response.body)
-        if res.first.keys == check_keys
-          res
-        else
-          raise Error
-        end
+        return JSON.parse(response.body)
       else
         raise Error
       end
-    rescue
+    rescue Exception
       retry_count += 1
       retry if retry_count <= 3
     end
+    return false
   end
 
   private

@@ -1,4 +1,4 @@
-class Api::V1::PostsController < ActionController::API
+class Api::V1::DashboardsController < ActionController::API
   def index
     tweets = TakeHome.new('twitter').get_data
     fb_posts = TakeHome.new('facebook').get_data
